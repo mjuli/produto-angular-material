@@ -1,17 +1,22 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, catchError, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { Produto } from '../model/produto';
 import { ProdutosService } from '../service/produtos.service';
 import { OnDeleteDialog } from './dialog/on-delete-dialog';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -25,6 +30,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatIconModule,
     MatDialogModule,
     MatToolbarModule,
+    MatPaginatorModule,
   ],
   templateUrl: './lista-produtos.component.html',
   styleUrl: './lista-produtos.component.scss',
@@ -33,6 +39,9 @@ export class ListaProdutosComponent {
   produtos$: Observable<Produto[]>;
   displayedColumns = ['nome', 'descricao', 'acao'];
   readonly dialog = inject(MatDialog);
+  dataSource = new MatTableDataSource<Produto>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private service: ProdutosService,
@@ -47,7 +56,8 @@ export class ListaProdutosComponent {
         return of([]);
       })
     );
-    console.log(service.list());
+
+    this.updateList();
   }
 
   onError(message: string, action: string) {
@@ -68,11 +78,24 @@ export class ListaProdutosComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
-      this.produtos$ = this.service.list();
+      this.updateList();
     });
   }
 
   onEdit(id: number) {
     this.router.navigate([`${id}/edit`], { relativeTo: this.activatedRoute });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  updateList() {
+    this.produtos$ = this.service.list();
+    this.produtos$.subscribe((produtos) => {
+      this.dataSource.data = produtos;
+      this.dataSource.paginator = this.paginator;
+      console.log(produtos);
+    });
   }
 }
