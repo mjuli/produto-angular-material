@@ -1,20 +1,27 @@
-AngularProdutoFront
-Este projeto foi gerado com o Angular CLI versão 17.3.7.
+# AngularProdutoFront
 
-Servidor de Desenvolvimento
-Execute ng serve para iniciar o servidor de desenvolvimento. Navegue para http://localhost:4200/. A aplicação será recarregada automaticamente se você alterar qualquer um dos arquivos de origem.
+Este projeto foi gerado com o [Angular CLI](https://angular.io/cli) versão 17.3.7.
 
-Criação de Componentes
-Execute ng generate component nome-do-componente para gerar um novo componente. Você também pode usar ng generate directive|pipe|service|class|guard|interface|enum|module.
+## Servidor de Desenvolvimento
 
-Construção
-Execute ng build para construir o projeto. Os artefatos de construção serão armazenados no diretório dist/.
+Execute `ng serve` para iniciar o servidor de desenvolvimento. Navegue para `http://localhost:4200/`. A aplicação será recarregada automaticamente se você alterar qualquer um dos arquivos de origem.
 
-Execução de Testes Unitários
-Execute ng test para executar os testes unitários via Karma.
+## Criação de Componentes
 
-Execução de Testes de Ponta a Ponta
-Execute ng e2e para executar os testes de ponta a ponta com a plataforma de sua escolha. Para usar este comando, você precisa primeiro adicionar um pacote que implemente capacidades de testes de ponta a ponta.
+Execute `ng generate component nome-do-componente` para gerar um novo componente. Você também pode usar `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Ajuda Adicional
-Para mais ajuda sobre o Angular CLI, use ng help ou consulte a Documentação do Angular CLI.
+## Construção
+
+Execute `ng build` para construir o projeto. Os artefatos de construção serão armazenados no diretório `dist/`.
+
+## Execução de Testes Unitários
+
+Execute `ng test` para executar os testes unitários via [Karma](https://karma-runner.github.io).
+
+## Execução de Testes de Ponta a Ponta
+
+Execute `ng e2e` para executar os testes de ponta a ponta com a plataforma de sua escolha. Para usar este comando, você precisa primeiro adicionar um pacote que implemente capacidades de testes de ponta a ponta.
+
+## Ajuda Adicional
+
+Para mais ajuda sobre o Angular CLI, use `ng help` ou consulte a [Documentação do Angular CLI](https://angular.io/cli).
