@@ -2,6 +2,10 @@
 
 Este projeto foi gerado com o [Angular CLI](https://angular.io/cli) versão 17.3.7.
 
+## Descrição do Projeto
+
+Este é um projeto front-end desenvolvido com Angular e Angular Material. O objetivo é fornecer uma interface de usuário moderna e responsiva para a gestão de produtos. Ele inclui funcionalidades como criação, edição e listagem de produtos, utilizando componentes e serviços do Angular Material para uma melhor experiência do usuário.
+
 ## Servidor de Desenvolvimento
 
 Execute `ng serve` para iniciar o servidor de desenvolvimento. Navegue para `http://localhost:4200/`. A aplicação será recarregada automaticamente se você alterar qualquer um dos arquivos de origem.
