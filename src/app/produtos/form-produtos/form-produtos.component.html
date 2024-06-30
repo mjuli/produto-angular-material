@@ -1,0 +1,18 @@
+<mat-toolbar color="primary" align="center">
+  <span>{{ title }} Produto</span>
+</mat-toolbar>
+
+<form [formGroup]="produtoForm" align="center">
+  <mat-form-field>
+    <input matInput placeholder="Nome" formControlName="nome" />
+  </mat-form-field>
+  <br />
+  <mat-form-field>
+    <input matInput placeholder="Descrição" formControlName="descricao" />
+  </mat-form-field>
+  <br />
+  <button mat-flat-button (click)="onSubmit()">
+    {{ title }}
+  </button>
+  <button mat-flat-button (click)="onCancel()">Cancelar</button>
+</form>

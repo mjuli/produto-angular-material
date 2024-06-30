@@ -1,0 +1,44 @@
+<mat-toolbar color="primary">
+  <span> Listagem de Produto </span>
+  <div style="width: 95%">
+    <button mat-fab style="float: right" (click)="onAdd()" color="tertiary">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+@if (produtos$ | async; as lista_produtos) {
+<table mat-table [dataSource]="lista_produtos" class="mat-elevation-z8">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef> Nome </th>
+    <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+  </ng-container>
+
+  <!-- Description Column -->
+  <ng-container matColumnDef="descricao">
+    <th mat-header-cell *matHeaderCellDef> Descrição </th>
+    <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="acao">
+    <th mat-header-cell *matHeaderCellDef>Ação</th>
+    <td mat-cell *matCellDef="let p">
+      <button mat-icon-button color="primary" aria-label="Editar" (click)="onEdit(p.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" aria-label="Remover" (click)="onDelete(p.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+} @else {
+<mat-spinner></mat-spinner>
+}
