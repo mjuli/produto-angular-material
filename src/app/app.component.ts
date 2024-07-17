@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,5 +9,10 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'angular-produto-front';
+  count = signal(0);
+  doubleCount = computed(() => this.count() * 2);
+
+  increment() {
+    this.count.update(value => value + 1);
+  }
 }

@@ -83,7 +83,13 @@ export class ListaProdutosComponent {
   }
 
   onEdit(id: number) {
-    this.router.navigate([`${id}/edit`], { relativeTo: this.activatedRoute });
+    this.produtos$.subscribe((produtos) => {
+      const produto = produtos.find((p) => p.id === id);
+      this.router.navigate([`${id}/edit`], {
+        queryParams: produto,
+        relativeTo: this.activatedRoute,
+      });
+    });
   }
 
   onPageChange(event: PageEvent) {
@@ -95,7 +101,6 @@ export class ListaProdutosComponent {
     this.produtos$.subscribe((produtos) => {
       this.dataSource.data = produtos;
       this.dataSource.paginator = this.paginator;
-      console.log(produtos);
     });
   }
 }

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ProdutosService } from '../service/produtos.service';
+import { Produto } from '../model/produto';
 
 @Component({
   selector: 'app-form-produtos',
@@ -27,6 +28,7 @@ export class FormProdutosComponent {
   produtoForm: FormGroup;
   title = 'Cadastrar';
   currentAction = 'new';
+  @Input({required: true}) produto: Produto | undefined;
 
   constructor(
     private builder: FormBuilder,
@@ -49,11 +51,14 @@ export class FormProdutosComponent {
   }
 
   updateForm() {
-    this.route.paramMap
-      .pipe(switchMap((params) => this.service.getOne(this.getRouteId())))
-      .subscribe((res) => {
-        this.produtoForm.patchValue(res);
-      });
+    // this.route.paramMap
+    //   .pipe(switchMap((params) => this.service.getOne(this.getRouteId())))
+    //   .subscribe((res) => {
+    //     this.produtoForm.patchValue(res);
+    //   });
+    this.route.queryParams.subscribe(p => {
+      this.produtoForm.patchValue(p);
+    });
   }
 
   onCancel() {
