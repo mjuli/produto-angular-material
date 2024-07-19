@@ -7,8 +7,7 @@
   </div>
 </mat-toolbar>
 
-@if (produtos$ | async; as lista_produtos) {
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 test-table">
 
   <!-- Name Column -->
   <ng-container matColumnDef="nome">
@@ -41,6 +40,3 @@
 <mat-paginator [length]="dataSource.data.length" [pageSize]=" 10" [pageSizeOptions]="[5, 10, 25, 100]"
   [showFirstLastButtons]="true" (page)="onPageChange($event)" aria-label="Selecione página">
 </mat-paginator>
-} @else {
-<mat-spinner></mat-spinner>
-}

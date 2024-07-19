@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, first, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Produto } from '../model/produto';
 
 @Injectable({
@@ -12,10 +12,7 @@ export class ProdutosService {
   constructor(private http: HttpClient) {}
 
   list(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.API_URL).pipe(
-      first(),
-      tap((p) => console.log(p))
-    );
+    return this.http.get<Produto[]>(this.API_URL);
   }
 
   create(p: Produto): Observable<Produto> {

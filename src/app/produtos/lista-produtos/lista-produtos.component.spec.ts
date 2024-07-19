@@ -2,6 +2,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProdutosService } from '../service/produtos.service';
 
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { Produto } from '../model/produto';
@@ -12,6 +15,7 @@ describe('ListaProdutosComponent', () => {
   let fixture: ComponentFixture<ListaProdutosComponent>;
   let produtoService: ProdutosService;
   let mockProdutos: Produto[];
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,13 +23,16 @@ describe('ListaProdutosComponent', () => {
         ListaProdutosComponent,
         HttpClientTestingModule,
         RouterModule.forRoot([]),
+        MatTableModule,
+        BrowserAnimationsModule,
       ],
       providers: [ProdutosService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListaProdutosComponent);
     component = fixture.componentInstance;
-    produtoService = TestBed.inject(ProdutosService);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    produtoService = new ProdutosService(httpClientSpy);
     fixture.detectChanges();
 
     mockProdutos = [
@@ -45,37 +52,52 @@ describe('ListaProdutosComponent', () => {
     );
   });
 
-  it('should fetch products on initialization', () => {
-    spyOn(produtoService, 'list').and.returnValue(of(mockProdutos));
+  it('should return expected products (HttpClient called once)', (done: DoneFn) => {
+    httpClientSpy.get.and.returnValue(of(mockProdutos));
 
-    component.produtos$.subscribe((res) => {
-      expect(res).toEqual(mockProdutos);
+    produtoService.list().subscribe({
+      next: (products) => {
+        expect(products).withContext('expected products').toEqual(mockProdutos);
+        done();
+      },
+      error: done.fail,
+    });
+
+    expect(httpClientSpy.get.calls.count()).withContext('one call').toBe(1);
+  });
+
+  it('should display products in the template', async () => {
+    component.dataSource.data = mockProdutos;
+
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      const tableRows = fixture.nativeElement.querySelectorAll(
+        '.mat-mdc-cell.mat-column-nome'
+      );
+      expect(tableRows.length).toBe(2);
+      expect(tableRows[0].textContent).toContain('Produto A');
+      expect(tableRows[1].textContent).toContain('Produto B');
     });
   });
 
-  it('should display products in the template', () => {
-    spyOn(produtoService, 'list').and.returnValue(of(mockProdutos)); // Espionar o método getProdutos do serviço e retornar um Observable mockado
+  it('should return an error when the server returns a 404', (done: DoneFn) => {
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404,
+      statusText: 'Not Found',
+    });
 
-    fixture.detectChanges(); // Atualizar a detecção de mudanças após configurar o spy
+    httpClientSpy.get.and.returnValue(throwError(() => errorResponse));
 
-    const productElements =
-      fixture.nativeElement.querySelectorAll('.product-item'); // Selecionar elementos que representam os produtos na interface
-
-    expect(productElements.length).toBe(mockProdutos.length); // Verificar se o número de elementos exibidos corresponde ao número de produtos mockados
-    expect(productElements[0].textContent).toContain(mockProdutos[0].nome); // Verificar se o nome do primeiro produto está presente na interface
-    expect(productElements[1].textContent).toContain(mockProdutos[1].nome); // Verificar se o nome do segundo produto está presente na interface
-  });
-
-  it('should handle errors when fetching products', () => {
-    const errorMessage = 'Error fetching products';
-    spyOn(produtoService, 'list').and.returnValue(
-      throwError({ message: errorMessage })
-    );
-
-    // component.produtos$.subscribe((res) => {
-    //   expect(res).toEqual(mockProdutos);
-    // });
-    expect(component.produtos$).toBeUndefined(); // Verificar se a lista de produtos está indefinida devido ao erro
-    // expect(component.errorMsg).toBe(errorMessage); // Verificar se a mensagem de erro foi definida corretamente
+    produtoService.list().subscribe({
+      next: () => {
+        done.fail('expected an error, not products');
+      },
+      error: (e) => {
+        expect(e.error).toContain('test 404 error');
+        done();
+      },
+    });
   });
 });
