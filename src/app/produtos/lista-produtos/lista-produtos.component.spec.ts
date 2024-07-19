@@ -72,12 +72,24 @@ describe('ListaProdutosComponent', () => {
     fixture.detectChanges();
 
     fixture.whenStable().then(() => {
-      const tableRows = fixture.nativeElement.querySelectorAll(
-        '.mat-mdc-cell.mat-column-nome'
+      const tableRowsNome =
+        fixture.nativeElement.querySelectorAll('.mat-column-nome');
+      expect(tableRowsNome.length).toBe(3);
+      expect(tableRowsNome[0].textContent).toContain('Nome');
+      expect(tableRowsNome[1].textContent).toContain('Produto A');
+      expect(tableRowsNome[2].textContent).toContain('Produto B');
+
+      const tableRowsDescricao = fixture.nativeElement.querySelectorAll(
+        '.mat-column-descricao'
       );
-      expect(tableRows.length).toBe(2);
-      expect(tableRows[0].textContent).toContain('Produto A');
-      expect(tableRows[1].textContent).toContain('Produto B');
+      expect(tableRowsDescricao.length).toBe(3);
+      expect(tableRowsDescricao[0].textContent).toContain('Descrição');
+      expect(tableRowsDescricao[1].textContent).toContain(
+        'Descrição do produto A'
+      );
+      expect(tableRowsDescricao[2].textContent).toContain(
+        'Descrição do produto B'
+      );
     });
   });
 
